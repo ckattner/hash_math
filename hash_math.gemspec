@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.summary     = 'Hash-based data structures and algorithms'
 
   s.description = <<-DESCRIPTION
-    This library offers general purpose higher-level data structures that are rooted in hashes.
+    This library offers general purpose higher-level data structures that focus on Hash manipulation.
   DESCRIPTION
 
   s.authors     = ['Matthew Ruggio']
