@@ -7,6 +7,11 @@
 # LICENSE file in the root directory of this source tree.
 #
 
+require_relative 'hash_math/matrix'
+require_relative 'hash_math/record'
+require_relative 'hash_math/table'
+
 # Top-level namespace
 module HashMath
+  class KeyOutOfBoundsError < StandardError; end
 end
