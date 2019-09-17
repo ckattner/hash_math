@@ -27,8 +27,7 @@ module HashMath
 
     def make(hash = {}, bound = false)
       hash.each_with_object(shallow_copy_prototype) do |(key, value), memo|
-        raise KeyOutOfBoundsError, "[#{key}] for: #{keys}" if not_key?(key) && bound
-        next if not_key?(key)
+        next unless assert_key_in_bounds(key, bound)
 
         memo[key] = value
       end
@@ -37,6 +36,15 @@ module HashMath
     private
 
     attr_reader :prototype
+
+    # raise error if key is not in key set and bound is true
+    # return true if key is in key set and bound is false
+    # return false if key is not in key set and bound is false
+    def assert_key_in_bounds(key, bound)
+      raise KeyOutOfBoundsError, "[#{key}] for: #{keys}" if not_key?(key) && bound
+
+      key?(key)
+    end
 
     def not_key?(key)
       !key?(key)
