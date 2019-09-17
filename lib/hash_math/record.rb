@@ -26,8 +26,8 @@ module HashMath
     end
 
     def make(hash = {}, bound = false)
-      (hash || {}).each_with_object(shallow_copy_prototype) do |(key, value), memo|
-        raise KeyOutOfBoundsError, "[#{key}] for: #{prototype.keys}" if not_key?(key) && bound
+      hash.each_with_object(shallow_copy_prototype) do |(key, value), memo|
+        raise KeyOutOfBoundsError, "[#{key}] for: #{keys}" if not_key?(key) && bound
         next if not_key?(key)
 
         memo[key] = value
