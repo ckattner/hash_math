@@ -14,29 +14,170 @@ See examples for more information on each data structure.
 
 To install through Rubygems:
 
-````
+````bash
 gem install install hash_math
 ````
 
 You can also add this to your Gemfile:
 
-````
+````bash
 bundle add hash_math
 ````
 
 ## Examples
 
-### The Matrix Builder
+### Matrix: The Hash Combination Calculator
 
-todo
+HashMath::Matrix is a key-value builder that outputs all the different hash combinations.
 
-### The Record Maker
+Say we have this type of matrix:
 
-todo
+````ruby
+{
+  a: [1,2,3],
+  b: [4,5,6],
+  c: [7,8,9]
+}
+````
 
-### The Table Builder
+We could code this as:
 
-todo
+````ruby
+matrix = HashMath::Matrix.new
+matrix.add_each(:a, [1,2,3])
+matrix.add_each(:b, [4,5,6])
+matrix.add_each(:c, [7,8,9])
+````
+
+Note: you can also call `Matrix#add` to only add a single value instead of add_each.
+
+and get the combinations by calling to_a:
+
+````ruby
+combinations = matrix.to_a
+````
+
+which would yield the following hashes:
+
+````ruby
+[
+  { a: 1, b: 4, c: 7 },
+  { a: 1, b: 4, c: 8 },
+  { a: 1, b: 4, c: 9 },
+  { a: 1, b: 5, c: 7 },
+  { a: 1, b: 5, c: 8 },
+  { a: 1, b: 5, c: 9 },
+  { a: 1, b: 6, c: 7 },
+  { a: 1, b: 6, c: 8 },
+  { a: 1, b: 6, c: 9 },
+
+  { a: 2, b: 4, c: 7 },
+  { a: 2, b: 4, c: 8 },
+  { a: 2, b: 4, c: 9 },
+  { a: 2, b: 5, c: 7 },
+  { a: 2, b: 5, c: 8 },
+  { a: 2, b: 5, c: 9 },
+  { a: 2, b: 6, c: 7 },
+  { a: 2, b: 6, c: 8 },
+  { a: 2, b: 6, c: 9 },
+
+  { a: 3, b: 4, c: 7 },
+  { a: 3, b: 4, c: 8 },
+  { a: 3, b: 4, c: 9 },
+  { a: 3, b: 5, c: 7 },
+  { a: 3, b: 5, c: 8 },
+  { a: 3, b: 5, c: 9 },
+  { a: 3, b: 6, c: 7 },
+  { a: 3, b: 6, c: 8 },
+  { a: 3, b: 6, c: 9 },
+]
+````
+
+Notes:
+
+* Matrix implements Ruby's Enumerable, which means you have the ability to iterate over each hash combination like you would any other Enumerable object.
+* Values can be arrays and it still works.  For example, `#add` (singular form) will honor the array data type: `matrix.add(:a, [1,2,3])` is **not** the same as: `matrix.add_each(:a, [1,2,3])` but it **is** the same as: `matrix.add(:a, [[1,2,3]])`
+* Keys are type-sensitive and work just like Hash keys work.
+
+### Record: The Hash Prototype
+
+HashMath::Record generates a prototype hash and ensures all derived hashes conform to its shape.
+
+Say we have a person hash, for example:
+
+````ruby
+{
+  id: 1,
+  name: 'Matt',
+  location: 'Chicago'
+}
+````
+
+we could create a record modeling this:
+
+````ruby
+record = HashMath::Record.new(%i[id name location], 'UNKNOWN')
+````
+
+Then, we could shape all other hashes using it to ensure each key is populated.  If a key is not populated, the base value will be used ('UNKNOWN' in our case.)  For example:
+
+````ruby
+records = [
+  record.make(id: 1, name: 'Matt', location: 'Chicago', dob: nil),
+  record.make(id: 2, age: 24),
+  record.make(id: 3, location: 'Los Angeles')
+]
+````
+
+Note: The keys `dob` and `age` appeared in the input but will be ignored as they do not conform to the Record.  You could make this strict and raise an error by calling `#make!` instead of `#make`.
+
+our `records` would now equate to:
+
+````ruby
+[
+  { id: 1, name: 'Matt', location: 'Chicago' },
+  { id: 2, name: 'UNKNOWN', location: 'UNKNOWN' },
+  { id: 3, name: 'UNKNOWN', location: 'Los Angeles' },
+]
+````
+
+Notes:
+
+* keys are type-sensitive and works just like Hash keys work.
+
+### Table: The Double Hash (Hash of Hashes)
+
+HashMath::Table builds on top of HashMath::Record.  It constructs a table data-structure using a key-value pair builder method: `#add(row_id, field_id, key, value)`.  It ultimately outputs an array of Row objects where each Row object has a row_id and fields (field_id => value) hash.  The value proposition here is you can iterate over a key-value pair and construct each row any way you wish.
+
+Building on our Record example above:
+
+````ruby
+record = HashMath::Record.new(%i[name location], 'UNKNOWN')
+
+table = HashMath::Table.new(record)
+                       .add(1, :name, 'Matt')
+                       .add(1, :location, 'Chicago')
+                       .add(2, :name, 'Nick')
+                       .add(3, :location, 'Los Angeles')
+                       .add(2, :name 'Nicholas') # notice the secondary call to "2, :name"
+
+rows = table.to_a
+````
+
+which would set our variable `rows` to:
+
+````ruby
+[
+  HashMath::Row.new(1, { name: 'Matt', location: 'Chicago' }),
+  HashMath::Row.new(2, { name: 'Nicholas', location: 'UNKNOWN' }),
+  HashMath::Row.new(3, { name: 'UNKNOWN', location: 'Los Angeles' })
+]
+````
+
+Notes:
+
+* `#add` will throw a KeyOutOfBoundsError if the key is not found.
+* key is type-sensitive and works just like Hash keys work.
 
 ## Contributing
 
