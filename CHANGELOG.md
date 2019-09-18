@@ -1,3 +1,7 @@
+# 1.0.0 (September 18th, 2019)
+
+Initial release.
+
 # 1.0.0-alpha (September 16th, 2019)
 
 Added initial implementation of:
