@@ -5,8 +5,8 @@
 Ruby's Hash data structure is ubiquitous and highly flexible.  This library contains common Hash patterns widely used within our code-base:
 
 * Matrix: build a hash up then expand into hash products
-* Record: define a list of keys and base value to use as a blueprint for hashes
-* Table: key-value pair two-dimensional array of hash builder
+* Record: define a list of keys and a base value (for each key) to use as a blueprint for hashes
+* Table: key-value pair builder for constructing a two-dimensional array (rows by fields)
 
 See examples for more information on each data structure.
 
@@ -147,7 +147,7 @@ Notes:
 
 ### Table: The Double Hash (Hash of Hashes)
 
-HashMath::Table builds on top of HashMath::Record.  It constructs a table data-structure using a key-value pair builder method: `#add(row_id, field_id, key, value)`.  It ultimately outputs an array of Row objects where each Row object has a row_id and fields (field_id => value) hash.  The value proposition here is you can iterate over a key-value pair and construct each row any way you wish.
+HashMath::Table builds on top of HashMath::Record.  It constructs a table data-structure using a key-value pair builder method: `#add(row_id, field_id, value)`.  It ultimately outputs an array of Row objects where each Row object has a row_id and fields (field_id => value) hash.  The value proposition here is you can iterate over a key-value pair and construct each row any way you wish.
 
 Building on our Record example above:
 
