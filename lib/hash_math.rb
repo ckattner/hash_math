@@ -7,9 +7,12 @@
 # LICENSE file in the root directory of this source tree.
 #
 
+require 'acts_as_hashable'
+
 require_relative 'hash_math/matrix'
 require_relative 'hash_math/record'
 require_relative 'hash_math/table'
+require_relative 'hash_math/unpivot'
 
 # Top-level namespace
 module HashMath

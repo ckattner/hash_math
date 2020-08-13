@@ -19,13 +19,16 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/bluemarblepayroll/hash_math'
   s.license     = 'MIT'
 
-  s.required_ruby_version = '>= 2.3.8'
+  s.required_ruby_version = '>= 2.5'
+
+  s.add_dependency('acts_as_hashable', '~>1')
 
   s.add_development_dependency('guard-rspec', '~>4.7')
   s.add_development_dependency('pry', '~>0')
-  s.add_development_dependency('rake', '~> 12')
+  s.add_development_dependency('pry-byebug', '~>3')
+  s.add_development_dependency('rake', '~>13.0')
   s.add_development_dependency('rspec')
-  s.add_development_dependency('rubocop', '~>0.74.0')
-  s.add_development_dependency('simplecov', '~>0.17.0')
-  s.add_development_dependency('simplecov-console', '~>0.5.0')
+  s.add_development_dependency('rubocop', '~>0.88.0')
+  s.add_development_dependency('simplecov', '~>0.18.5')
+  s.add_development_dependency('simplecov-console', '~>0.7.0')
 end

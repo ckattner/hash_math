@@ -179,6 +179,57 @@ Notes:
 * `#add` will throw a KeyOutOfBoundsError if the key is not found.
 * key is type-sensitive and works just like Hash keys work.
 
+### Unpivot: Hash Key Coalescence and Row Extrapolation
+
+Sometimes the expected interface is column-based, but the actual data store is row-based.  This causes an impedance between the input set and the persistable data set.  HashMath::Unpivot has the ability to extrapolate one hash (row) into multiple hashes (rows) while unpivoting specific keys into key-value pairs.
+
+For example: say we have a database table persisting key-value pairs of patient attributes:
+
+patient_id | field           | value
+---------- | --------------- | ----------
+2          | first_exam_date | 2020-01-03
+2          | last_exam_date  | 2020-04-05
+2          | consent_date    | 2020-01-02
+
+But our input data looks like this:
+
+````ruby
+patient = {
+  patient_id: 2,
+  first_exam_date: '2020-01-03',
+  last_exam_date: '2020-04-05',
+  consent_date: '2020-01-02'
+}
+````
+
+We could use a HashMath::Unpivot to go from one hash to three hashes:
+
+````ruby
+pivot_set = {
+  pivots: [
+    {
+      keys: %i[first_exam_date last_exam_date consent_date],
+      coalesce_key: :field,
+      coalesce_key_value: :value
+    }
+  ]
+}
+
+rows = HashMath::Unpivot.new(pivot_set).perform(patient)
+````
+
+The `rows` variable should now be equivalent to:
+
+````ruby
+[
+  { patient_id: 2, field: :first_exam_date, value: '2020-01-03' },
+  { patient_id: 2, field: :last_exam_date,  value: '2020-04-05' },
+  { patient_id: 2, field: :consent_date,    value: '2020-01-02' }
+]
+````
+
+Note: `HashMath::Unpivot#add` also exists to update an already instantiated object with new pivot_sets.
+
 ## Contributing
 
 ### Development Environment Configuration

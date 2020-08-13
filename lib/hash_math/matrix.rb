@@ -40,8 +40,12 @@ module HashMath
       pairs_by_key[key] ||= KeyValuePair.new(key)
     end
 
+    def make_pair_groups
+      pairs_by_key.values.map(&:pairs)
+    end
+
     def pair_products
-      pair_groups = pairs_by_key.values.map(&:pairs)
+      pair_groups = make_pair_groups
 
       products = pair_groups.inject(pair_groups.shift) { |memo, f| memo.product(f) }
                             &.map { |f| f.is_a?(KeyValuePair::Pair) ? [f] : f.flatten } || []

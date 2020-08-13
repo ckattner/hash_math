@@ -1,3 +1,13 @@
+# 1.1.0 (August 13t, 2020)
+
+Adding:
+
+* HashMath#Unpivot class and implementation.
+
+Removing:
+
+* Support for Ruby < 2.5
+
 # 1.0.0 (September 18th, 2019)
 
 Initial release.
